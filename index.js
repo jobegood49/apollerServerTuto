@@ -1,5 +1,7 @@
 const { ApolloServer, gql } = require('apollo-server');
 const { makeExecutableSchema } = require('graphql-tools');
+const { find, filter } = require('lodash');
+
 
 
 const books = [
@@ -13,6 +15,17 @@ const books = [
     },
 ];
 
+const authors = [
+    {
+        id: 1,
+        books: [books[0]],
+    },
+    {
+        id: 2,
+        books: [books[1]],
+    },
+];
+
 const typeDefs = gql`
 
   type Book {
@@ -20,17 +33,28 @@ const typeDefs = gql`
     author: String
   }
 
-  type Query {
+  type Author {
+    id: Int
     books: [Book]
-    yo: String
+  }
+
+
+  type Query {
+    # books: [Book]
+    # yo: String
+    author(id: Int!): Author
   }
 `;
 
 // A map of functions which return data for the schema.
 const resolvers = {
     Query: {
-        yo: () => 'world',
-        books: () => books
+        // yo: () => 'world',
+        // books: () => books,
+        author: function(root, args, context, info) {
+          let author = find(authors, { id: args.id })
+          return author;
+        }
     }
 };
 
