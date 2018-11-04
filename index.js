@@ -2,11 +2,26 @@ const { ApolloServer, gql } = require('apollo-server');
 const { makeExecutableSchema } = require('graphql-tools');
 
 
+const books = [
+    {
+        title: 'Harry Potter and the Chamber of Secrets',
+        author: 'J.K. Rowling',
+    },
+    {
+        title: 'Jurassic Park',
+        author: 'Michael Crichton',
+    },
+];
 
-// The GraphQL schema
 const typeDefs = gql`
+
+  type Book {
+    title: String
+    author: String
+  }
+
   type Query {
-    "A simple type for getting started!"
+    books: [Book]
     yo: String
   }
 `;
@@ -14,7 +29,8 @@ const typeDefs = gql`
 // A map of functions which return data for the schema.
 const resolvers = {
     Query: {
-        yo: () => 'world'
+        yo: () => 'world',
+        books: () => books
     }
 };
 
